@@ -99,7 +99,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # setup variables
-./variable-setup.sh
+source ./variable-setup.sh
 
 # ansible setups
 ./setup_hosts.sh
