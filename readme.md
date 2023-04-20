@@ -56,6 +56,19 @@ Before we could start with the demo, the demo requires some basic setups
 	2. apply system update, installation of docker, and system configuration through `ansible`
 	3. copy the docker compose to the remote VM through `SCP`
 
+	**P.S.** make sure you see some output like `{ip}  SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1`. 
+	```shell
+	Setup known_hosts for 172.104.40.40
+	Host 172.104.40.40 not found in /home/xeth/.ssh/known_hosts
+	# 172.104.40.40:22 SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+	# 172.104.40.40:22 SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+	# 172.104.40.40:22 SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+	# 172.104.40.40:22 SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+	# 172.104.40.40:22 SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+	```
+	
+	The script sometime fail due to the SSH on remote host not yet ready for connection the error should be liek `host unreachable`. Just re-execute the command again, the script is safe to be re-execute.
+
 5. SSH into the remote server and start up the docker with `docker-compose.yaml`
 	```shell
 	# If executed `source init.sh`, the IP address of the VM is stored as environment variable in `ip`
@@ -68,8 +81,73 @@ Before we could start with the demo, the demo requires some basic setups
 	docker compose up
 	```
 	
+	```shell
+	root@localhost:~/sonarqube# cd ~/sonarqube
+	root@localhost:~/sonarqube# docker compose up
+	# Output
+	#
+	#[+] Running 21/21
+	# ✔ db 13 layers [⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                            19.6s
+	#   ✔ 26c5c85e47da Pull complete                                                                                    4.2s
+	#   ✔ 1c30a4c3f519 Pull complete                                                                                    4.4s
+	#.
+	#.
+	#.
+	# ✔ sonarqube 6 layers [⣿⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                             24.1s
+	#   ✔ 74ac377868f8 Pull complete                                                                                    9.7s
+	#   ✔ a182a611d05b Pull complete                                                                                   11.4s
+	#   ✔ cdb51f9f6377 Pull complete                                                                                   15.0s
+	#   ✔ 1365afd8cae0 Pull complete                                                                                   15.2s
+	#   ✔ a400e494cf72 Pull complete                                                                                   20.3s
+	#   ✔ d0dc5f994ca8 Pull complete                                                                                   20.4s
+	#[+] Running 8/8
+	# ✔ Network sonarqube_default                Created                                                                0.1s
+	#.
+	#.
+	#.
+	# ✔ Container postgresql                     Created                                                                0.0s
+	# ✔ Container sonarqube                      Created                                                                0.0s
+	#Attaching to postgresql, sonarqube
+	#postgresql  | The files belonging to this database system will be owned by user "postgres".
+	#postgresql  | This user must also own the server process.
+	#.
+	#.
+	#.
+	#postgresql  | 2023-04-20 08:00:58.116 UTC [62] LOG:  database system was shut down at 2023-04-20 08:00:58 UTC
+	#postgresql  | 2023-04-20 08:00:58.121 UTC [1] LOG:  database system is ready to accept connections
+	#sonarqube   | 2023.04.20 08:00:58 INFO  app[][o.s.a.AppFileSystem] Cleaning or creating temp directory /opt/sonarqube/temp
+	#sonarqube   | 2023.04.20 08:00:58 INFO  app[][o.s.a.es.EsSettings] Elasticsearch listening on [HTTP: 127.0.0.1:9001, TCP	
+	```
+	
 6. After the command runs completes and shows the web server started. The user can access the sonarqube dashboard through the public IP address.
 	```shell
-	curl "http:$ip:9000"
+	curl "http://$ip:9000"
+	```
+	
+	```shell
+	(venv) xeth@localhost:~/sonarqube/sonarqube-how-to-demo$ curl http://$ip:9000
+	# Output
+	#
+	#<!DOCTYPE html>
+	#<html lang="en">
+	#
+	#<head>
+	#.
+	#.
+	#.
+	#</head>
+	#
+	#<body>
+	#    <div id="content" data-base-url="" data-server-status="UP" data-instance="SonarQube" data-official="true">
+	#	<div class="global-loading">
+	#	    <i class="spinner global-loading-spinner"></i>
+	#	    <span aria-live="polite" class="global-loading-text">Loading...</span>
+	#	</div>
+	#    </div>
+	#
+	#    <script type="module" src="/js/out4CRO2ANZ.js"></script>
+	#</body>
+	#
+	#</html>
 	```
 
