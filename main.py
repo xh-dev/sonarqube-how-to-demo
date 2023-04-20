@@ -46,7 +46,7 @@ create_file("inventory.yaml", write_inventory_file)
 
 def write_setup_hosts(f):
 	script = """\
-!/bin/bash
+#!/bin/bash
 
 setup_known_hosts(){
 				 export ip=$1
