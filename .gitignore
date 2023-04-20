@@ -1,0 +1,12 @@
+*.auto.tfvars
+.terraform
+.terraform.lock.hcl
+terraform.tfstate terraform.tfstate.backup
+init.auto.tfvars
+venv
+init-ubuntu.yaml
+install-docker.yaml
+ansible-playbook-script.sh
+init.sh
+setup_hosts.sh
+variable-setup.sh

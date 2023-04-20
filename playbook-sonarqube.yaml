@@ -1,0 +1,28 @@
+---
+  - name: setup /etc/sysctl.conf
+    hosts: fresh-server
+    tasks:
+      - ansible.posix.sysctl:
+          name: vm.max_map_count
+          value: '524288'
+          state: present
+      - ansible.posix.sysctl:
+          name: fs.file-max
+          value: '131072'
+          state: present
+  # https://docs.ansible.com/ansible/latest/collections/ansible/posix/sysctl_module.html#ansible-collections-ansible-posix-sysctl-module
+  - name: copy docker compose to server
+    hosts: fresh-server
+    tasks:
+      - name: create sonarqube directory
+        ansible.builtin.file:
+          path: ~/sonarqube
+          state: directory
+          mode: '0755'
+      - name: copy docker compose to server
+        become: true
+        copy:
+          src: ./docker/docker-compose.yaml
+          dest: ~/sonarqube
+          owner: root
+          group: root
